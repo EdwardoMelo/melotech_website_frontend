@@ -15,6 +15,9 @@ import footerImage3 from './assets/footer-img-3.png';
 import footerImage4 from './assets/footer-img-4.png';
 import headerGif from './assets/header-gif.webp';
 import menuIcon from './assets/menu.png';
+import closeIcon from './assets/close.png'
+import whatsAppIcon from './assets/whatsapp.png';
+import instaLogo from './assets/instagram-2.png';
 
 import "./App.css";
 import './Responsive.css';
@@ -27,7 +30,7 @@ function App() {
   const navLinks = [
     {
       name: "Home",
-      href: "#home", // Classe ou ID da seção correspondente
+      href: "#header", // Classe ou ID da seção correspondente
     },
     {
       name: "Sobre Nós",
@@ -125,24 +128,46 @@ function App() {
                 </li>
               ))}
             </ul>
-            <button onClick={() => setDropDownActive(!dropDownActive)} className="navbar-menu-btn">
+            <button
+              style={{ opacity: !dropDownActive ? 1 : 0 }}
+              onClick={() => setDropDownActive(!dropDownActive)}
+              className="navbar-menu-btn"
+            >
               <img src={menuIcon} alt="menuIcon" height="30px" width="30px" />
             </button>
             <div
               style={{
-              
                 transform: dropDownActive
                   ? "translateY(0)"
                   : "translateY(-100%)",
               }}
               className="dropdown-menu"
-            ></div>
+            >
+              <ul>
+                {navLinks.map((navLink) => (
+                  <li>
+                    <a href={navLink.href}>{navLink.name}</a>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => setDropDownActive(false)}
+                className="close-dropdown-btn"
+              >
+                <img
+                  src={closeIcon}
+                  height="20px"
+                  width="20px"
+                  alt="closeIcon"
+                />
+              </button>
+            </div>
 
             <div className="navbar-callToAction">
               <img src={phoneIcon} alt="" />
               <div>
                 <span>ENTRE EM CONTATO</span>
-                <strong>51 99895-1079</strong>
+                <p>51 99895-1079</p>
               </div>
             </div>
           </div>
@@ -311,7 +336,7 @@ function App() {
           <div className="footer-logo">
             <div className="flex items-center text-white">
               {" "}
-              <img src={logo} alt="" />
+              <img src={logo} alt="logo" />
               <h1 className="footer-company-title">MELOTECH</h1>
             </div>
             <div className="footer-social_icons"></div>
@@ -354,6 +379,23 @@ function App() {
             </div>
           </div>
         </footer>
+        <div className="suspense-whats-btn-container">
+          <button className="suspense-btn">
+            <a target="_blank" href="https://wa.me/5551998951079?text=Ol%C3%A1">
+              {" "}
+              <img src={whatsAppIcon} height="40px" width="40px" />
+            </a>
+          </button>
+          <button className="suspense-btn">
+            <a
+              target="_blank"
+              href="https://www.instagram.com/melotech.consulting"
+            >
+              {" "}
+              <img src={instaLogo} height="40px" width="40px" />
+            </a>
+          </button>
+        </div>
       </div>
     </>
   );
