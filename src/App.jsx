@@ -1,68 +1,55 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser"; // Importe o EmailJS
 import logo from "./assets/logo.png";
 import instagramLogo from "./assets/instagram.png";
 import FacebookLogo from "./assets/facebook.png";
 import LinkedInLogo from "./assets/linked-in.png";
 import phoneIcon from "./assets/phone-icon.svg";
 import emailLogo from "./assets/email-logo.svg";
-import service_one from './assets/service-1.png';
-import service_two from './assets/service-2.png';
-import service_three from './assets/service-3.png';
-import form_image from './assets/contact-us-img.jpg'
-import footerImage1 from './assets/footer-img-1.png';
-import footerImage2 from './assets/footer-img-2.png';
-import footerImage3 from './assets/footer-img-3.png';
-import footerImage4 from './assets/footer-img-4.png';
-import headerGif from './assets/header-gif.webp';
-import menuIcon from './assets/menu.png';
-import closeIcon from './assets/close.png'
-import whatsAppIcon from './assets/whatsapp.png';
-import instaLogo from './assets/instagram-2.png';
+import service_one from "./assets/service-1.png";
+import service_two from "./assets/service-2.png";
+import service_three from "./assets/service-3.png";
+import form_image from "./assets/contact-us-img.jpg";
+import footerImage1 from "./assets/footer-img-1.png";
+import footerImage2 from "./assets/footer-img-2.png";
+import footerImage3 from "./assets/footer-img-3.png";
+import footerImage4 from "./assets/footer-img-4.png";
+import headerGif from "./assets/header-gif.webp";
+import menuIcon from "./assets/menu.png";
+import closeIcon from "./assets/close.png";
+import whatsAppIcon from "./assets/whatsapp.png";
+import instaLogo from "./assets/instagram-2.png";
+import polygon from './assets/polygon-3.png';
 
 import "./App.css";
-import './Responsive.css';
-
+import "./Responsive.css";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [dropDownActive, setDropDownActive] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [formStatus, setFormStatus] = useState(null); // Para feedback de envio
 
   const navLinks = [
-    {
-      name: "Home",
-      href: "#header", // Classe ou ID da seção correspondente
-    },
-    {
-      name: "Sobre Nós",
-      href: "#sobre",
-    },
-    {
-      name: "Serviços",
-      href: "#servicos", // Classe ou ID da seção correspondente
-    },
-    {
-      name: "Projetos",
-      href: "#projetos", // Classe ou ID da seção correspondente
-    },
-    {
-      name: "Contato",
-      href: "#contato", // Classe ou ID da seção correspondente
-    },
+    { name: "Home", href: "#header" },
+    { name: "Sobre Nós", href: "#sobre" },
+    { name: "Serviços", href: "#servicos" },
+    { name: "Projetos", href: "#projetos" },
+    { name: "Contato", href: "#contato" },
   ];
+
   const footerImages = [
-    { 
-      image  : footerImage1
-    },
-    { 
-      image: footerImage2
-    },
-    { 
-      image: footerImage3
-    },
-    { 
-      image: footerImage4
-    }
-  ]
+    { image: footerImage1 },
+    { image: footerImage2 },
+    { image: footerImage3 },
+    { image: footerImage4 },
+  ];
+
   const services = [
     {
       name: "Design",
@@ -80,23 +67,69 @@ function App() {
       image: service_three,
     },
   ];
+
   const socials = [
-    {
-      name: "Facebook",
-      logo: FacebookLogo,
-      link: "",
-    },
+    { name: "Facebook", logo: FacebookLogo, link: "" },
     {
       name: "Instagram",
       logo: instagramLogo,
       link: "https://www.instagram.com/melotech.consulting",
     },
-    {
-      name: "Linked-In",
-      logo: LinkedInLogo,
-      link: "",
-    },
+    { name: "Linked-In", logo: LinkedInLogo, link: "" },
   ];
+
+  // Função para lidar com mudanças nos inputs
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Função para enviar o e-mail com EmailJS
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormStatus(null);
+
+    emailjs
+      .send(
+        "service_mm6fnok", // Substitua pelo seu Service ID
+        "template_b252h96", // Substitua pelo seu Template ID
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        },
+        "X-Cb5Zeb_C5L8tjHy" // Substitua pela sua Public Key
+      )
+      .then(
+        (response) => {
+          setFormStatus({
+            type: "success",
+            message: "Mensagem enviada com sucesso!",
+          });
+          // Limpar o formulário
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            subject: "",
+            message: "",
+          });
+        },
+        (error) => {
+          setFormStatus({
+            type: "error",
+            message: "Erro ao enviar mensagem. Tente novamente.",
+          });
+          console.error("Erro ao enviar e-mail:", error);
+        }
+      );
+  };
+
   return (
     <>
       <div className="app">
@@ -106,24 +139,31 @@ function App() {
             <div className="navbar-top-container_social">
               <ul>
                 {socials.map((socialLinkButton) => (
-                  <li>
-                    <a href={socialLinkButton.link} target="_blank">
-                      <img src={socialLinkButton.logo} />
+                  <li key={socialLinkButton.name}>
+                    <a
+                      href={socialLinkButton.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={socialLinkButton.logo}
+                        alt={socialLinkButton.name}
+                      />
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="navbar-top-container_email"></div>
-            <div></div>
           </div>
           <div className="navbar-container">
             <div className="navbar-logo">
-              <img src={logo} />
+              <img src={logo} alt="Melotech Logo" />
+              <h1 className="melotech-navbar">MELOTECH</h1>
             </div>
             <ul className="navbar-links">
               {navLinks.map((navLink) => (
-                <li>
+                <li key={navLink.name}>
                   <a href={navLink.href}>{navLink.name}</a>
                 </li>
               ))}
@@ -133,7 +173,7 @@ function App() {
               onClick={() => setDropDownActive(!dropDownActive)}
               className="navbar-menu-btn"
             >
-              <img src={menuIcon} alt="menuIcon" height="30px" width="30px" />
+              <img src={menuIcon} alt="menuIcon" height="20px" width="20px" />
             </button>
             <div
               style={{
@@ -145,7 +185,7 @@ function App() {
             >
               <ul>
                 {navLinks.map((navLink) => (
-                  <li>
+                  <li key={navLink.name}>
                     <a href={navLink.href}>{navLink.name}</a>
                   </li>
                 ))}
@@ -162,9 +202,8 @@ function App() {
                 />
               </button>
             </div>
-
             <div className="navbar-callToAction">
-              <img src={phoneIcon} alt="" />
+              <img src={phoneIcon} alt="Phone Icon" />
               <div>
                 <span>ENTRE EM CONTATO</span>
                 <p>51 99895-1079</p>
@@ -184,7 +223,6 @@ function App() {
               <p>A Solução completa em software e design para a sua empresa</p>
             </div>
           </div>
-
           <div className="header-hero-img-container"></div>
         </header>
 
@@ -193,12 +231,12 @@ function App() {
           {/* About Us Section */}
           <section id="sobre" className="about-us">
             <div className="about-us_content">
-              <div className="about-us_image ">
+              <div className="about-us_image">
                 <div className="abouts-us_image_two">
                   <div className="h-[10px] w-1/2 bg-blue-500 absolute top-0 left-0" />
-                  <div className="w-[10px] h-1/2 bg-blue-500  absolute top-0 left-0" />
-                  <div className="h-[12px] w-[90%] bg-blue-500  absolute top-[-20px] left-[-20px]" />
-                  <div className="w-[12px] h-[90%] bg-blue-500  absolute top-[-20px] left-[-20px]" />
+                  <div className="w-[10px] h-1/2 bg-blue-500 absolute top-0 left-0" />
+                  <div className="h-[12px] w-[90%] bg-blue-500 absolute top-[-20px] left-[-20px]" />
+                  <div className="w-[12px] h-[90%] bg-blue-500 absolute top-[-20px] left-[-20px]" />
                 </div>
                 <div className="about-us_image_email">
                   <img
@@ -234,12 +272,12 @@ function App() {
               <h1>Nossos Serviços</h1>
               <div className="services-grid">
                 {services.map((service) => (
-                  <div className="service-card">
+                  <div key={service.name} className="service-card">
                     <div className="service-card_image">
                       <img
                         className="service-img w-full"
                         src={service.image}
-                        alt="service-img"
+                        alt={`${service.name} image`}
                       />
                       <div className="service-card_service-name">
                         <h1>{service.name}</h1>
@@ -248,9 +286,14 @@ function App() {
                     <div className="service-card_text-content">
                       <p>{service.text}</p>
                     </div>
-                    <div className="service-card_start-btn">
-                      <span>COMEÇAR</span>
-                    </div>
+                    <a
+                      href="https://wa.me/5551998951079?text=Ol%C3%A1"
+                      target="_blank"
+                    >
+                      <button className="service-card_start-btn">
+                        <span>COMEÇAR</span>
+                      </button>
+                    </a>
                   </div>
                 ))}
               </div>
@@ -268,8 +311,22 @@ function App() {
                 />
               </div>
               <div className="form-container">
-                {/* <h2>Contact Us</h2> */}
-                <form className="contact-form">
+                <div className="flex items-center gap-4">
+                  <div className="flex">
+                    {[1, 2, 3].map((icon) => (
+                      <img src={polygon} alt="polygon" />
+                    ))}
+                  </div>
+                  <h1 className="contact-form-text">
+                    Sinta-se à vontade para nos escrever
+                  </h1>
+                  <div className="flex transform rotate-180">
+                    {[1, 2, 3].map((icon) => (
+                      <img src={polygon} alt="polygon" />
+                    ))}
+                  </div>
+                </div>
+                <form className="contact-form" onSubmit={handleSubmit}>
                   <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="name">Seu Nome</label>
@@ -278,6 +335,9 @@ function App() {
                         id="name"
                         name="name"
                         placeholder="Seu Nome"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
                       />
                     </div>
                     <div className="form-group">
@@ -287,6 +347,9 @@ function App() {
                         id="email"
                         name="email"
                         placeholder="Endereço De Email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
                       />
                     </div>
                   </div>
@@ -299,6 +362,8 @@ function App() {
                         id="phone"
                         name="phone"
                         placeholder="Telefone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
                       />
                     </div>
                     <div className="form-group">
@@ -308,6 +373,8 @@ function App() {
                         id="subject"
                         name="subject"
                         placeholder="Assunto"
+                        value={formData.subject}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -319,12 +386,27 @@ function App() {
                       name="message"
                       placeholder="Escreva uma mensagem"
                       rows="5"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
                     ></textarea>
                   </div>
 
                   <button type="submit" className="submit-button">
                     Enviar Uma Mensagem
                   </button>
+
+                  {/* Feedback do envio */}
+                  {formStatus && (
+                    <p
+                      style={{
+                        color: formStatus.type === "success" ? "green" : "red",
+                        marginTop: "10px",
+                      }}
+                    >
+                      {formStatus.message}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>
@@ -335,8 +417,7 @@ function App() {
         <footer className="footer">
           <div className="footer-logo">
             <div className="flex items-center text-white">
-              {" "}
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="Melotech Logo" />
               <h1 className="footer-company-title">MELOTECH</h1>
             </div>
             <div className="footer-social_icons"></div>
@@ -346,53 +427,81 @@ function App() {
             <div className="footer-social_links">
               <ul>
                 {socials.map((social) => (
-                  <li>
-                    <a target="_blank" href={social.link}>
-                      <img src={social.logo} alt="logo" />
+                  <li key={social.name}>
+                    <a
+                      target="_blank"
+                      href={social.link}
+                      rel="noopener noreferrer"
+                    >
+                      <img src={social.logo} alt={`${social.name} logo`} />
                       <p>{social.name}</p>
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="footer-images ">
-              {footerImages.map((footerImage) => (
-                <img src={footerImage.image} className="h-[100px] w-[100px]" />
+            <div className="footer-images">
+              {footerImages.map((footerImage, index) => (
+                <img
+                  key={index}
+                  src={footerImage.image}
+                  className="h-[100px] w-[100px]"
+                  alt={`Footer image ${index + 1}`}
+                />
               ))}
             </div>
             <div className="footer-contact">
               <h1 className="meeting">Marque sua reunião!</h1>
-              {
-                <ul>
-                  <li className="footer-contact-list">
-                    <a>
-                      <img src={phoneIcon} className="h-[24px] w-[24px]" />
-                      <strong>51 9989851079</strong>
-                    </a>
-                    <a href="">
-                      <img src={emailLogo} className="h-[24px] w-[24px]" />
-                      <strong>melotech.consulting@gmail.com</strong>
-                    </a>
-                  </li>
-                </ul>
-              }
+              <ul>
+                <li className="footer-contact-list">
+                  <a>
+                    <img
+                      src={phoneIcon}
+                      className="h-[24px] w-[24px]"
+                      alt="Phone Icon"
+                    />
+                    <strong>51 9989851079</strong>
+                  </a>
+                  <a href="mailto:melotech.consulting@gmail.com">
+                    <img
+                      src={emailLogo}
+                      className="h-[24px] w-[24px]"
+                      alt="Email Icon"
+                    />
+                    <strong>melotech.consulting@gmail.com</strong>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </footer>
         <div className="suspense-whats-btn-container">
           <button className="suspense-btn">
-            <a target="_blank" href="https://wa.me/5551998951079?text=Ol%C3%A1">
-              {" "}
-              <img src={whatsAppIcon} height="40px" width="40px" />
+            <a
+              target="_blank"
+              href="https://wa.me/5551998951079?text=Ol%C3%A1"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={whatsAppIcon}
+                height="40px"
+                width="40px"
+                alt="WhatsApp Icon"
+              />
             </a>
           </button>
           <button className="suspense-btn">
             <a
               target="_blank"
               href="https://www.instagram.com/melotech.consulting"
+              rel="noopener noreferrer"
             >
-              {" "}
-              <img src={instaLogo} height="40px" width="40px" />
+              <img
+                src={instaLogo}
+                height="40px"
+                width="40px"
+                alt="Instagram Icon"
+              />
             </a>
           </button>
         </div>
