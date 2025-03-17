@@ -53,6 +53,8 @@ body {
   gap: 1rem;
   list-style: none;
 }
+
+
 .navbar-top-container_email{ 
   height: 40px;
   width: 80%;
@@ -114,7 +116,6 @@ body {
   list-style: none;
   display: flex;
   gap: 1rem;
-
 }
 
 .navbar-links li {

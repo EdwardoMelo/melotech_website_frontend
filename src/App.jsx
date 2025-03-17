@@ -14,12 +14,16 @@ import footerImage2 from './assets/footer-img-2.png';
 import footerImage3 from './assets/footer-img-3.png';
 import footerImage4 from './assets/footer-img-4.png';
 import headerGif from './assets/header-gif.webp';
+import menuIcon from './assets/menu.png';
 
 import "./App.css";
+import './Responsive.css';
 
 
 function App() {
   const [count, setCount] = useState(0);
+  const [dropDownActive, setDropDownActive] = useState(false);
+
   const navLinks = [
     {
       name: "Home",
@@ -121,6 +125,19 @@ function App() {
                 </li>
               ))}
             </ul>
+            <button onClick={() => setDropDownActive(!dropDownActive)} className="navbar-menu-btn">
+              <img src={menuIcon} alt="menuIcon" height="30px" width="30px" />
+            </button>
+            <div
+              style={{
+              
+                transform: dropDownActive
+                  ? "translateY(0)"
+                  : "translateY(-100%)",
+              }}
+              className="dropdown-menu"
+            ></div>
+
             <div className="navbar-callToAction">
               <img src={phoneIcon} alt="" />
               <div>
