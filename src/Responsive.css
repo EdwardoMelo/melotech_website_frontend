@@ -162,7 +162,11 @@
       min-height: 1300px;
    }
    .contact-form-text{ 
-      
+      font-size: 2rem;
+      text-align: justify;
+   }
+   .form-text-animated{ 
+      display: block
    }
 
    .contact-form_image {

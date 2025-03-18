@@ -1,5 +1,4 @@
 import { useState } from "react";
-import emailjs from "@emailjs/browser"; // Importe o EmailJS
 import logo from "./assets/logo.png";
 import instagramLogo from "./assets/instagram.png";
 import FacebookLogo from "./assets/facebook.png";
@@ -19,7 +18,7 @@ import menuIcon from "./assets/menu.png";
 import closeIcon from "./assets/close.png";
 import whatsAppIcon from "./assets/whatsapp.png";
 import instaLogo from "./assets/instagram-2.png";
-import polygon from './assets/polygon-3.png';
+import polygon from "./assets/polygon-3.png";
 
 import "./App.css";
 import "./Responsive.css";
@@ -87,47 +86,52 @@ function App() {
     }));
   };
 
-  // Função para enviar o e-mail com EmailJS
-  const handleSubmit = (e) => {
+  // Função para enviar o e-mail via API local
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus(null);
 
-    emailjs
-      .send(
-        "service_mm6fnok", // Substitua pelo seu Service ID
-        "template_b252h96", // Substitua pelo seu Template ID
+    try {
+      const response = await fetch(
+        "https://melotechwebsitebackend.vercel.app/api/email/send-contact-us",
         {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-        },
-        "X-Cb5Zeb_C5L8tjHy" // Substitua pela sua Public Key
-      )
-      .then(
-        (response) => {
-          setFormStatus({
-            type: "success",
-            message: "Mensagem enviada com sucesso!",
-          });
-          // Limpar o formulário
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            subject: "",
-            message: "",
-          });
-        },
-        (error) => {
-          setFormStatus({
-            type: "error",
-            message: "Erro ao enviar mensagem. Tente novamente.",
-          });
-          console.error("Erro ao enviar e-mail:", error);
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // Envia os dados do formulário
         }
       );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormStatus({
+          type: "success",
+          message: data.message || "Mensagem enviada com sucesso!",
+        });
+        // Limpa o formulário após sucesso
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        setFormStatus({
+          type: "error",
+          message: data.error || "Erro ao enviar mensagem. Tente novamente.",
+        });
+      }
+    } catch (error) {
+      setFormStatus({
+        type: "error",
+        message:
+          "Erro ao conectar com o servidor. Verifique se a API está rodando.",
+      });
+      console.error("Erro ao enviar e-mail:", error);
+    }
   };
 
   return (
@@ -311,8 +315,8 @@ function App() {
                 />
               </div>
               <div className="form-container">
-                <div className="flex items-center gap-4">
-                  <div className="flex">
+                <div className="form-text-animated flex items-center gap-4">
+                  <div className="polygon-animation flex">
                     {[1, 2, 3].map((icon) => (
                       <img src={polygon} alt="polygon" />
                     ))}
@@ -320,7 +324,7 @@ function App() {
                   <h1 className="contact-form-text">
                     Sinta-se à vontade para nos escrever
                   </h1>
-                  <div className="flex transform rotate-180">
+                  <div className="polygon-animation flex transform rotate-180">
                     {[1, 2, 3].map((icon) => (
                       <img src={polygon} alt="polygon" />
                     ))}
