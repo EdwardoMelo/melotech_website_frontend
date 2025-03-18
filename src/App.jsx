@@ -93,7 +93,8 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://melotechwebsitebackend.vercel.app/api/email/send-contact-us",
+        //https://melotech-website-backend-l21m.vercel.app/api
+        "https://melotech-website-backend-l21m.vercel.app/api/email/send-contact-us",
         {
           method: "POST",
           headers: {
